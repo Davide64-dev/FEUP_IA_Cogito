@@ -85,6 +85,7 @@ class GUI:
         menu_items = ["Human Mode", "Computer Mode", "Exit"]
         bot_menu = ["A* Algorithm", "Iterative Deepening", "Greedy Search", "Uniform Cost"]
         heuristic_menu = ["Sum of Distances", "Number of Pieces", "Distance to Center"]
+        weights_menu = ["0.8", "1.0", "1.2", "1.5"]
         mode = self.drawMenu(menu_items)
         if mode == "Computer Mode":
             bot_mode = self.drawMenu(bot_menu)
@@ -97,7 +98,8 @@ class GUI:
                 elif heuristic_mode == "Distance to Center":
                     heuristic_function = heuristic_sum_of_distances_to_center
             if bot_mode == "A* Algorithm":
-                self.game.setComputerMode(AStar(self.game, heuristic_function))
+                weight_aStar = self.drawMenu(weights_menu)
+                self.game.setComputerMode(AStar(self.game, heuristic_function, float(weight_aStar)))
             elif bot_mode == "Iterative Deepening":
                 self.game.setComputerMode(IterativeDeepening(self.game))
             elif bot_mode == "Uniform Cost":

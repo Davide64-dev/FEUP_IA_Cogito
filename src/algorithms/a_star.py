@@ -15,12 +15,13 @@ class Node:
         return self.game.board < other.game.board
 
 class AStar(Bot):
-    def __init__(self, game, heuristic_func):
+    def __init__(self, game, heuristic_func, weight = 1.0):
         super().__init__(game)
         self.heuristic_func = heuristic_func
         self.came_from = {}
         self.move_sequence = []
         self.tree = []
+        self.weight = weight
 
     def make_move(self):
 
@@ -94,7 +95,7 @@ class AStar(Bot):
 
                 if node_game.board not in cost_so_far or new_cost < cost_so_far[node_game.board]:
                     cost_so_far[node_game.board] = new_cost
-                    priority = new_cost + self.heuristic_func(node_game.board)
+                    priority = new_cost + self.weight * self.heuristic_func(node_game.board)
                     new_node = Node(node_game, current, move)
                     frontier.put((priority, new_node))
                     self.tree.append(new_node)
