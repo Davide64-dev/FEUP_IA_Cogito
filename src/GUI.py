@@ -83,7 +83,7 @@ class GUI:
 
         # Show the menu before starting the game
         menu_items = ["Human Mode", "Computer Mode", "Exit"]
-        bot_menu = ["A* Algorithm", "Iterative Deepening", "Greedy Search"]
+        bot_menu = ["A* Algorithm", "Iterative Deepening", "Greedy Search", "Uniform Cost"]
         heuristic_menu = ["Sum of Distances", "Number of Pieces", "Distance to Center"]
         mode = self.drawMenu(menu_items)
         if mode == "Computer Mode":
@@ -100,6 +100,8 @@ class GUI:
                 self.game.setComputerMode(AStar(self.game, heuristic_function))
             elif bot_mode == "Iterative Deepening":
                 self.game.setComputerMode(IterativeDeepening(self.game))
+            elif bot_mode == "Uniform Cost":
+                self.game.setComputerMode(UniformCost(self.game))
             elif bot_mode == "Greedy Search":
                 self.game.setComputerMode(GreedySearch(self.game, heuristic_function))
         elif mode == "Exit":
