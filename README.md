@@ -1,13 +1,32 @@
 # Running:
 Start the game by:
-- `pip install -r requirements.txt`
-- `cd src`
-- `python3 main.py`
+
+```sh
+pip install -r requirements.txt
+```
+
+```sh
+cd src
+```
+
+```sh
+python3 main.py
+```
 
 ### Optional - create a virtual environment (installs packages only locally in the project)
-- `python -m venv venv`
-- `source venv/bin/activate`
-- to exit: `deactivate`
+
+```sh
+python -m venv venv
+```
+```sh
+source venv/bin/activate
+```
+
+to exit: 
+
+```sh
+deactivate
+```
 
 You are then presented with a menu that will allow to choose between the regular gameplay mode, or between a selection of implemented algorithms that will try to solve the levels by themselves.
 
