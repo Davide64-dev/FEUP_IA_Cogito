@@ -5,6 +5,7 @@ from game import Game
 from GUI import GUI
 
 
+# Main function
 def main():
     pygame.init()
     

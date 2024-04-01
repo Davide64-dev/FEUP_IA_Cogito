@@ -2,16 +2,16 @@ import pygame
 
 from sound import Sound
 from menu import Menu
-from bot import Bot, RandomBot, ListBot
 from algorithms.uniform_cost import UniformCost
 from algorithms.a_star import AStar
 from algorithms.greedy_search import GreedySearch
-from algorithms.heuristics.n_pieces import heuristic_count_pieces_outside, heuristic_sum_of_distances, heuristic_sum_of_distances_to_center
+from algorithms.heuristics import heuristic_count_pieces_outside, heuristic_sum_of_distances, heuristic_sum_of_distances_to_center
 from algorithms.iterative_deepening import IterativeDeepening
 
-
+# Facade to communicate with pygame. The GUI class
 class GUI:
 
+    # Constructor - Makes a new GUI based on the size of the cell of the game board
     def __init__(self, game, cell_size=65):
         self.game = game
         # set the GUI element of Game
@@ -66,6 +66,7 @@ class GUI:
         # cap fps
         self.fps = 60
 
+    # Handles the user's input and make the action
     def handleInput(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -77,6 +78,7 @@ class GUI:
                 self.game.toggle_cell(row, col)
         return True
 
+    # Facade to run the menu/game
     def run(self):
 
         Sound.playBackgroundTheme()
@@ -138,10 +140,12 @@ class GUI:
             # cap the frame rate to the specific fps
             self.clock.tick(self.fps)
 
+    # Renders the text
     def render_text(self, text, position, color=(255, 255, 255)):
         rendered_text = self.info_board_font.render(text, True, color)
         self.screen.blit(rendered_text, position)
 
+    # Util function to resize an image
     def resizeImage(self, image, factor):
         orig_width = image.get_width()
         orig_height = image.get_height()
@@ -151,6 +155,7 @@ class GUI:
 
         return pygame.transform.scale(image, (new_width, new_height))
 
+    # Given all possible options, it draws a menu
     def drawMenu(self, menu_items):
         menu = Menu(menu_items)
 
@@ -173,6 +178,7 @@ class GUI:
             menu.draw(self.screen, self.width/2, self.height/2 + 150)
             pygame.display.flip()
 
+    # It draws a given board
     def drawBoard(self):
         start_height = self.board_top_margin
         left_gap = self.board_left_margin
@@ -213,6 +219,7 @@ class GUI:
                 cell_image = self.cell_images[1] if self.game.board.board[row][col] else self.cell_images[0]
                 screen.blit(cell_image, ((col + 1) * cell_size + left_gap, (row + 1) * cell_size + start_height))
 
+    # Draws the goal board
     def drawGoalBoard(self, x_offset, y_offset):
         start_height = y_offset
         left_gap = x_offset
@@ -232,6 +239,7 @@ class GUI:
 
         screen.blit(board_surface, (left_gap, start_height))
 
+    # Prints on the GUI the game's info such as level, time, and number of moves
     def renderInfoBoard(self):
         # Create a surface for the info panel
         info_panel_surface = pygame.Surface(self.info_board.get_size()).convert_alpha()
@@ -269,6 +277,7 @@ class GUI:
         # Blit the info panel surface onto the main display
         self.screen.blit(info_panel_surface, (info_panel_x, info_panel_y))
 
+    # Prints the win Message when the user/bot finishes the level
     def showWinMessage(self):
         width, height = self.win_box.get_size()
 

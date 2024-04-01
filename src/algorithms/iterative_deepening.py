@@ -3,6 +3,7 @@ import pygame
 from sound import Sound
 import threading
 
+# Auxiliary code to represent a Iterative Deepening Node
 class Node:
     def __init__(self, game, depth, parent=None, move=None):
         self.game = game
@@ -11,10 +12,13 @@ class Node:
         self.move = move
 
 class IterativeDeepening(Bot):
+
+    # Constructor - It receives the game it will operate in
     def __init__(self, game, move_list=[]):
         super().__init__(game)
         self.move_list = move_list
 
+    # Makes a move
     def make_move(self):
         if self.game.is_moving or not self.game.level_active:
             return
@@ -40,7 +44,8 @@ class IterativeDeepening(Bot):
 
         move_thread = threading.Thread(target=move_caller)
         move_thread.start()
-            
+    
+    # Performs Iterative Deepening
     def iterative_deepening(self):
         max_depth = 0
 
@@ -53,7 +58,7 @@ class IterativeDeepening(Bot):
             max_depth += 1
 
     
-    #returns solution sequence if found, else false
+    # Performs DFS with a pre-defined max depth
     def dfs(self, max_depth):
         frontier = []
         root = Node(self.game, 0)
@@ -80,6 +85,7 @@ class IterativeDeepening(Bot):
                 
         return False
     
+    # Backtracks the Iterative Deepening output to get the path from the initial board to the winning board
     def build_solution(node):
         solution = []
 

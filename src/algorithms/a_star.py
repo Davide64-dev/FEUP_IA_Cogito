@@ -5,6 +5,7 @@ from queue import PriorityQueue
 import threading
 from board import Board
 
+# Auxiliary Code to Define a A* Node
 class Node:
     def __init__(self, game, parent=None, move=None):
         self.game = game
@@ -14,7 +15,10 @@ class Node:
     def __lt__(self, other):
         return self.game.board < other.game.board
 
+# AStar Bot
 class AStar(Bot):
+
+    # Constructor. It receives the game it will operate in, the heuristic function to evaluate the game and the A* weight
     def __init__(self, game, heuristic_func, weight = 1.0):
         super().__init__(game)
         self.heuristic_func = heuristic_func
@@ -23,6 +27,7 @@ class AStar(Bot):
         self.tree = []
         self.weight = weight
 
+    # Makes the bot's move
     def make_move(self):
 
         if self.game.is_moving or not self.game.level_active:
@@ -30,23 +35,6 @@ class AStar(Bot):
 
         if not self.came_from:
             self.move_sequence = self.a_star()
-            print(self.move_sequence)
-            """
-            current_board = Board(9)
-            current_board.board = self.gamecopy.board.objective.copy()
-            while self.gamecopy.board.board != current_board.board:
-                print("--------------------------")
-                print(current_board)
-                next_board, move = self.came_from[current_board]
-                print(next_board.board)
-                print(move)
-
-                temp = Board(9)
-                temp.board = next_board.board.board.copy()
-                current_board = temp
-                self.move_sequence.append(move)
-            self.move_sequence.reverse()
-            """
         
         def move_caller():
             self.game.is_moving = True
@@ -56,7 +44,7 @@ class AStar(Bot):
                 row, col = self.move_sequence[0]
                 self.move_sequence = self.move_sequence[1:]
                 self.game.make_move(row, col)
-                print(f"[LOG] Moved ({row}, {col})")
+                print(f"[LOG] A* Bot Moved ({row}, {col})")
             else:
                 print("[LOG] No more moves in sequence")
 
@@ -66,7 +54,8 @@ class AStar(Bot):
 
         move_thread = threading.Thread(target=move_caller)
         move_thread.start()
-        
+    
+    # Performs the A*
     def a_star(self):
         frontier = PriorityQueue()
         initial_node = Node(self.game)
@@ -103,6 +92,7 @@ class AStar(Bot):
 
         return new_node
 
+    # Backtracks the A* output to get the path from the initial board to the winning board
     def construct_path(self, node):
         path = []
         while node.parent:

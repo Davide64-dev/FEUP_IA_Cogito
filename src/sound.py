@@ -1,6 +1,6 @@
 import pygame
 
-
+# Facade pattern to handle sound such as the game music, row shifting, or the winning music
 class Sound:
     @staticmethod
     def playBackgroundTheme():

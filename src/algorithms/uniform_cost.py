@@ -5,6 +5,7 @@ from queue import PriorityQueue
 import threading
 from board import Board
 
+# Auxiliary Code to represent a Uniform Cost Node
 class Node:
     def __init__(self, game, parent=None, move=None, cost=0):
         self.game = game
@@ -15,12 +16,16 @@ class Node:
     def __lt__(self, other):
         return self.cost < other.cost
 
+# Uniform Cost Node
 class UniformCost(Bot):
+
+    # Constuctor - It will receive the game the bot will operate in
     def __init__(self, game):
         super().__init__(game)
         self.move_sequence = []
         self.tree = []
 
+    # Makes a move
     def make_move(self):
         if self.game.is_moving or not self.game.level_active:
             return
@@ -46,7 +51,8 @@ class UniformCost(Bot):
 
         move_thread = threading.Thread(target=move_caller)
         move_thread.start()
-        
+
+    # Performs Uniform Cost Search  
     def uniform_cost_search(self):
         frontier = PriorityQueue()
         initial_node = Node(self.game)
@@ -76,6 +82,7 @@ class UniformCost(Bot):
 
         return []
 
+    # Backtracks the Uniform Cost output to get the path from the initial board to the winning board
     def construct_path(self, node):
         path = []
         while node.parent:

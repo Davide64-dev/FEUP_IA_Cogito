@@ -7,9 +7,10 @@ import pygame
 import threading
 import copy
 
-
+# Class that represents the ongoing game
 class Game:
 
+    # Constructor. Creates a new game with the size of the board.
     def __init__(self, board_size):
         self.isComputerMode = False
         self.bot = None
@@ -31,14 +32,15 @@ class Game:
         }
         self.secondary_layout_mov_rules = (4, 10)
 
+    # Sets the GUI
     def setGUI(self, gui: GUI):
         self.gui = gui
 
+    # Changes the game mode to computer and assigns a bot to i
     def setComputerMode(self, bot):
         self.bot = bot
         self.isComputerMode = True
 
-    # utilitary functions
     def isLeftSideArrow(self, row, col):
         return col == 0 and 1 <= row <= 9
 
@@ -51,6 +53,7 @@ class Game:
     def isBottomSideArrow(self, row, col):
         return row == 10 and 1 <= col <= 9
 
+    # Check if a clisk is an arrow click (valid click)
     def isArrowClick(self, row, col):
         if self.requires2ndLayout() and not self.checkArrow2ndLayout(row, col):
             return False
@@ -60,6 +63,7 @@ class Game:
                 self.isTopSideArrow(row, col) or \
                 self.isBottomSideArrow(row, col)
 
+    # Makes the move to the board/game
     def toggle_cell(self, row, col):
         # don't allow making moves before the level has started
         # or if the game is not on human mode
@@ -70,6 +74,7 @@ class Game:
             self.make_move(row, col)
             self.move_count += 1
 
+    # Shuffles the board according to level's requirements
     def mt_board_shuffle(self):
         # shuffles the board on a new thread, doesn't block rendering new frames
         def shuffle_caller():
@@ -77,9 +82,11 @@ class Game:
         shuffle_thread = threading.Thread(target=shuffle_caller)
         shuffle_thread.start()
 
+    # Displays the time since the begining of the level
     def currentLevelTime(self):
         return pygame.time.get_ticks() - self.level_start_time
 
+    # Return the current time since the begining og the level
     def getTimeString(self):
         if not self.is_timing:
             return "00:00:00"
@@ -109,10 +116,12 @@ class Game:
         self.level += 1
         Sound.playWinMusic()
 
+    # Starts the timer
     def startTiming(self):
         self.level_start_time = pygame.time.get_ticks()
         self.is_timing = True
 
+    # Updates the logic after the level change
     def updateLogic(self):
         if not self.level_active: # start level
             self.startLevel()
@@ -124,6 +133,7 @@ class Game:
             self.endLevel()
             self.startLevel()
 
+    # Shuffles the board in the same thread
     def shuffle_board(self):
         if self.is_shuffling:
             return
@@ -147,9 +157,11 @@ class Game:
         self.is_shuffling = False
         self.level_active = True
 
+    # Returns the rule of the move
     def getMovementRule(self):
         return (self.level - 1) % self.MOVEMENT_RULE_QNT + 1
 
+    # Maps the move to the rule depending on the level
     def make_move(self, row, col):
         move_set = {
                 1: self.make_move_1,
@@ -171,7 +183,7 @@ class Game:
 
     def requires2ndLayout(self):
         return self.getMovementRule() in self.secondary_layout_mov_rules
-
+    
     def checkArrow2ndLayout(self, row, col):
         if col in (0, 10) and \
             self.secondary_arrow_layout['col'][row] is False:
@@ -184,6 +196,7 @@ class Game:
 
     # read README.md for information on how these rules work
 
+    # Level 1 rules
     def make_move_1(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateRowRight(row - 1)
@@ -194,6 +207,7 @@ class Game:
         elif self.isBottomSideArrow(row, col):
             self.board.rotateColumnUp(col - 1)
 
+    # Level 2 rules
     def make_move_2(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateRowRight(row - 1)
@@ -208,6 +222,7 @@ class Game:
             self.board.rotateColumnUp(col - 1)
             self.board.rotateColumnUp(col - 1)
 
+    # Level 3 rules
     def make_move_3(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateColumnUp(row - 1)
@@ -218,10 +233,12 @@ class Game:
         elif self.isBottomSideArrow(row, col):
             self.board.rotateRowRight(col - 1)
 
+    # Level 4 rules
     def make_move_4(self, row, col):
         if self.checkArrow2ndLayout(row, col):
             self.make_move_1(row, col)
 
+    # Level 5 rules
     def make_move_5(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateRowLeft(row - 1)
@@ -232,6 +249,7 @@ class Game:
         elif self.isBottomSideArrow(row, col):
             self.board.rotateColumnDown(col - 1)
 
+    # Level 6 rules
     def make_move_6(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateRowLeft(9 - row )
@@ -242,6 +260,7 @@ class Game:
         elif self.isBottomSideArrow(row, col):
             self.board.rotateColumnDown(9 - col)
 
+    # Level 7 rules
     def make_move_7(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateRowLeft(9 - row )
@@ -256,6 +275,7 @@ class Game:
             self.board.rotateColumnDown(9 - col)
             self.board.rotateColumnUp(col - 1)
 
+    # Level 8 rules
     def make_move_8(self, row, col):
         if self.isLeftSideArrow(row, col):
             self.board.rotateRowRight(row - 1)
@@ -270,6 +290,7 @@ class Game:
             self.board.rotateColumnUp(col - 1)
             self.board.rotateRowRight(col - 1)
 
+    # Level 9 rules
     def make_move_9(self, row, col):
         if row == 5 or col == 5:
             self.make_move_1(row, col)
@@ -286,10 +307,12 @@ class Game:
             self.board.rotateColumnUp(col - 1)
             self.board.rotateColumnUp(9 - col)
 
+    # Level 10 rules
     def make_move_10(self, row, col):
         if self.checkArrow2ndLayout(row, col):
             self.make_move_8(row, col)
 
+    # Level 11 rules
     def make_move_11(self, row, col):
         if row == 9 or col == 9:
             adj = 0 
@@ -309,6 +332,7 @@ class Game:
             self.board.rotateColumnUp(col - 1)
             self.board.rotateColumnUp(adj)
 
+    # Level 12 rules
     def make_move_12(self, row, col):
         if col == 1 or col == 2 or row == 1 or row == 2:
             adj = 6 + row if (col == 0 or col == 10) else 6 + col
@@ -328,10 +352,11 @@ class Game:
             self.board.rotateColumnUp(col - 1)
             self.board.rotateColumnUp(adj)
 
+    # < operator override
     def __lt__(self, other):
         return (self.board < other.board)
     
-        
+    # returns all valid branches from the current game state
     def valid_moves(self):
         valid_moves = set()
         for i in range (0, 11):
@@ -342,7 +367,8 @@ class Game:
                     move = (i,j)
                     valid_moves.add((gamecopy, move))
         return valid_moves
-    
+
+    # Copies the game into a new one
     def deep_copy_game(self):
         new_game = Game(len(self.board.board))  # Create a new Game instance with the same board size
         
