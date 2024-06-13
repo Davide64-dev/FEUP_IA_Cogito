@@ -1,4 +1,8 @@
-# Running:
+# Artificial Intelligence
+
+The development of this program is part of the curriculum for the [Artificial Intelligence](https://sigarra.up.pt/feup/en/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=520334) course.
+
+## Running:
 Start the game by:
 
 ```sh
@@ -30,19 +34,19 @@ deactivate
 
 You are then presented with a menu that will allow to choose between the regular gameplay mode, or between a selection of implemented algorithms that will try to solve the levels by themselves.
 
-# The Game
+## The Game
 
 - Cogito is a single-player puzzle game. You are given a randomly shuffled board, and your goal is to rearrange the pieces to replicate the positions of the objective board as fast and with the least moves possible.
 - You can do this by clicking the arrows on the borders of the board and shift collumns/rows. However the actual shift will not always be what you expect, as there are 12 different rules defining the action of the arrows, that change with each level.
 
-## Game Rules
+### Game Rules
 > There are 12 different movement rules. At the end of level 12, the game returns to the initial rule (where each movement corresponds to only the movement actually made), but increases the difficulty by changing the objective of the board.
 
 > It is not known for sure how many different boards exist.
 
 > At the top, there is a counter with the time of the current level, the number of the current level, the move counter for the current level, and a mysterious number.
 
-## Movement Rules
+### Movement Rules
 - 1: moving a column or row corresponds to shifting the selected column or row by one
 - 2: same as rule 1, but shifts 2 spaces at a time
 - 3: moving a column corresponds to shifting the corresponding row and vice versa (e.g., clicking on row 1 will move column 1, etc.)
